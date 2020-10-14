@@ -23,29 +23,34 @@ const roomList = (query) => {
     const {
         upcomingLive,
         liveNow,
-        group
+        group,
+        roomId
     } = query;
     const upcomingFilter = (list) => list.filter(i => i.next_live_schedule !== 0);
     const liveNowFilter = (list) => list.filter(i => i.is_live === true);
+    const personFilter = (list, roomId) => list.filter(i => i.id == roomId);
 
     return request.get('https://campaign.showroom-live.com/akb48_sr/data/room_status_list.json').then(async res => {
         let data = res.body;
 
         if(upcomingLive === "true") data = upcomingFilter(data);
         if(liveNow === "true") data = liveNowFilter(data);
+        if(roomId) data = personFilter(data, roomId);
 
-        data = data.sort((a, b) => {
+        data = data.map(row => {
+            const next_live_schedule = row.next_live_schedule;
+            row.next_live_schedule = next_live_schedule > 0 ? moment(next_live_schedule * 1000).format('MM/DD h:mm A~') : 0;
+            row.next_live_schedule_2 = next_live_schedule > 0 ? moment(next_live_schedule * 1000).format('DD MMMM YYYY, HH:mm') : 0;
+            row.ranking = `${process.env.BASE_URL}/api/rooms/ranking?roomId=${row.id}`;
+            return row;
+        }).sort((a, b) => {
             const textA = a.name.toUpperCase();
             const textB = b.name.toUpperCase();
             return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
-        }).map(row => {
-            row.next_live_schedule = row.next_live_schedule > 0 ? moment(row.next_live_schedule * 1000).format('YYYY-MM-DD H:mm:ss') : 0;
-            row.ranking = `${process.env.BASE_URL}/api/rooms/ranking?roomId=${row.id}`;
-            return row;
         })
-        data = groupPerGroup(data, group);
+        if(!roomId) data = groupPerGroup(data, group);
 
-        return data;
+        return (roomId && data.length > 0) ? data[0] : data;
     })
 }
 

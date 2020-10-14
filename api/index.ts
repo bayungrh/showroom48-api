@@ -10,7 +10,8 @@ export default async function(req: NowRequest, res: NowResponse) {
         roomQuery: {
             perGroup: `${BASE_URL}/api/rooms?group=AKB48`,
             liveNow: `${BASE_URL}/api/rooms?liveNow=true`,
-            upcomingLive: `${BASE_URL}/api/rooms?upcomingLive=true`
+            upcomingLive: `${BASE_URL}/api/rooms?upcomingLive=true`,
+            selectRoom: `${BASE_URL}/api/rooms?roomId=[roomId]`
         },
         roomRanking: `${BASE_URL}/api/rooms/ranking?roomId=[roomId]`
     })
