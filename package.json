@@ -1,0 +1,21 @@
+{
+  "name": "showroom48-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "*.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "12"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@vercel/node": "^1.8.1"
+  },
+  "dependencies": {
+    "moment": "^2.29.1",
+    "unirest": "^0.6.0"
+  }
+}
