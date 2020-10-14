@@ -39,14 +39,14 @@ const roomList = (query) => {
     const liveNowFilter = (list) => list.filter(i => i.is_live === true);
     const personFilter = (list, roomId) => list.filter(i => i.id == roomId);
 
-    return request.get('https://campaign.showroom-live.com/akb48_sr/data/room_status_list.json').then(res => {
+    return request.get('https://campaign.showroom-live.com/akb48_sr/data/room_status_list.json').then(async res => {
         let data = res.body;
 
         if(upcomingLive === "true") data = upcomingFilter(data);
         if(liveNow === "true") data = liveNowFilter(data);
         if(roomId) data = personFilter(data, roomId);
 
-        data = Promise.map(data, async row => {
+        data = await Promise.map(data, async row => {
             const next_live_schedule = row.next_live_schedule;
             row.next_live_schedule = next_live_schedule > 0 ? moment(next_live_schedule * 1000).format('MM/DD h:mm A~') : 0;
             row.next_live_schedule_2 = next_live_schedule > 0 ? moment(next_live_schedule * 1000).format('DD MMMM YYYY, HH:mm') : 0;
