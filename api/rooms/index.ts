@@ -55,6 +55,7 @@ const roomList = (query) => {
                 next_live_schedule_1 = temp_sched.format('MM/DD h:mm A~');
                 next_live_schedule_2 = temp_sched.format('DD MMMM YYYY, HH:mm A');
             }
+            row.epoch_next_live_schedule = next_live_schedule;
             row.next_live_schedule = next_live_schedule_1;
             row.next_live_schedule_2 = next_live_schedule_2;
             row.images = {
