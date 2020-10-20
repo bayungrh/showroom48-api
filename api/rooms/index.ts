@@ -1,6 +1,6 @@
 import { NowRequest, NowResponse } from '@vercel/node';
 import request from 'unirest';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import Promise from 'bluebird';
 
 const groupPerGroup = (list, selected = '') => {
@@ -48,8 +48,15 @@ const roomList = (query) => {
 
         data = await Promise.map(data, async row => {
             const next_live_schedule = row.next_live_schedule;
-            row.next_live_schedule = next_live_schedule > 0 ? moment(next_live_schedule * 1000).format('MM/DD h:mm A~') : 0;
-            row.next_live_schedule_2 = next_live_schedule > 0 ? moment(next_live_schedule * 1000).format('DD MMMM YYYY, HH:mm') : 0;
+            let next_live_schedule_1, next_live_schedule_2 = 0;
+
+            if(next_live_schedule > 0) {
+                const temp_sched = moment(next_live_schedule * 1000).tz('Asia/Jakarta');
+                next_live_schedule_1 = temp_sched.format('MM/DD h:mm A~');
+                next_live_schedule_2 = temp_sched.format('DD MMMM YYYY, HH:mm A');
+            }
+            row.next_live_schedule = next_live_schedule_1;
+            row.next_live_schedule_2 = next_live_schedule_2;
             row.images = {
                 small: row.image_url.replace('_m.', '_s.'),
                 medium: row.image_url,
