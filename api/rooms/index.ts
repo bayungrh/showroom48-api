@@ -24,11 +24,11 @@ const profile = (roomId) => {
     return request.get(`https://www.showroom-live.com/api/room/profile?room_id=${roomId}`).then(data => {
         const {
             room_id, room_name, birthday, current_live_started_at, follower_num, genre_name, avatar, 
-            award_list, banner_list, is_birthday, is_official, is_onlive, league_label, room_level, main_name
+            award_list, banner_list, is_birthday, is_official, is_onlive, league_label, room_level, main_name, event, current_live_started_at
         } = data.body;
         return  {
             room_id, room_name, room_level, league_label, main_name, avatar, award_list,
-            birthday, banner_list, current_live_started_at, follower_num, genre_name, is_birthday, is_official, is_onlive
+            birthday, banner_list, current_live_started_at, follower_num, genre_name, is_birthday, is_official, is_onlive, event, current_live_started_at
         }
     });
 }
