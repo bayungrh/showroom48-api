@@ -1,12 +1,9 @@
-import {
-  NowRequest,
-  NowResponse
-} from '@vercel/node';
+import { VercelRequest, VercelResponse } from '@vercel/node';
 import request from 'unirest';
 import moment from 'moment-timezone';
-import Promise from 'bluebird';
+import Promises from 'bluebird';
 
-const groupPerGroup = (list, selected = '') => {
+const groupPerGroup = (list: any, selected = '') => {
   let groups = ['AKB48', 'HKT48', 'JKT48', 'NGT48', 'NMB48', 'SKE48', 'STU48'];
   let isValid = false;
   selected = selected.toUpperCase();
@@ -17,7 +14,7 @@ const groupPerGroup = (list, selected = '') => {
   const temp = {};
   for (const index in groups) {
     const group = groups[index];
-    const filterGroup = list.filter((l) => l.name.search(group) > 0);
+    const filterGroup = list.filter((l: any) => l.name.search(group) > 0);
     if (filterGroup) temp[group.toUpperCase()] = filterGroup;
   }
   return isValid ? temp[selected] : temp;
@@ -71,20 +68,20 @@ const roomList = (query) => {
     group,
     roomId
   } = query;
-  const upcomingFilter = (list) => list.filter(i => i.next_live_schedule !== 0);
-  const liveNowFilter = (list) => list.filter(i => i.is_live === true);
-  const personFilter = (list, roomId) => list.filter(i => i.id == roomId);
+  const upcomingFilter = (list: any) => list.filter((i: any) => i.next_live_schedule !== 0);
+  const liveNowFilter = (list: any) => list.filter((i: any) => i.is_live === true);
+  const personFilter = (list: any, roomId: any) => list.filter((i: any) => i.id == roomId);
 
-  return request.get('https://campaign.showroom-live.com/akb48_sr/data/room_status_list.json').then(async res => {
+  return request.get('https://campaign.showroom-live.com/akb48_sr/data/room_status_list.json').then(async (res: any) => {
     let data = res.body;
 
     if (upcomingLive === "true") data = upcomingFilter(data);
     if (liveNow === "true") data = liveNowFilter(data);
     if (roomId) data = personFilter(data, roomId);
 
-    data = await Promise.map(data, async row => {
+    data = await Promises.map(data, async (row: any) => {
       const next_live_schedule = row.next_live_schedule;
-      let next_live_schedule_1, next_live_schedule_2 = 0;
+      let next_live_schedule_1, next_live_schedule_2;
 
       if (next_live_schedule > 0) {
         const temp_sched = moment(next_live_schedule * 1000).tz('Asia/Jakarta');
@@ -105,7 +102,7 @@ const roomList = (query) => {
       if (roomId) row.profile = await profile(row.id);
       delete row.image_url;
       return row;
-    }).then(data => data.sort((a, b) => {
+    }).then((data: any) => data.sort((a, b) => {
       const textA = a.name.toUpperCase();
       const textB = b.name.toUpperCase();
       return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
@@ -116,15 +113,13 @@ const roomList = (query) => {
 }
 
 
-export default async function (req: NowRequest, res: NowResponse) {
+export default async function (req: VercelRequest, res: VercelResponse) {
   try {
     const proto = req.headers['x-forwarded-proto'] || 'http';
     const host = req.headers['x-forwarded-host'];
     process.env.BASE_URL = `${proto}://${host}`;
 
-    roomList(req.query).then(data => {
-      return res.status(200).json(data);
-    })
+    roomList(req.query).then((data: any) => res.status(200).json(data));
   } catch (error) {
     return res.status(500).json(error)
   }
