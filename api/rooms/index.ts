@@ -79,7 +79,7 @@ const roomList = (query) => {
     if (liveNow === "true") data = liveNowFilter(data);
     if (roomId) data = personFilter(data, roomId);
 
-    data = await Promises.map(data, async (row: any) => {
+    data = await Promises.map(data, async (row) => {
       const next_live_schedule = row.next_live_schedule;
       let next_live_schedule_1, next_live_schedule_2;
 
