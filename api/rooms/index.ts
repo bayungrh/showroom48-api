@@ -114,7 +114,7 @@ const roomList = (query) => {
 }
 
 
-export default async function (req: VercelRequest, res: VercelResponse) {
+export default function (req: VercelRequest, res: VercelResponse) {
   try {
     const proto = req.headers['x-forwarded-proto'] || 'http';
     const host = req.headers['x-forwarded-host'];
