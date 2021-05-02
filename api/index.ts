@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
-export default async function(req: VercelRequest, res: VercelResponse) {
+export default function(req: VercelRequest, res: VercelResponse) {
   const proto = req.headers['x-forwarded-proto'] || 'http';
   const host = req.headers['x-forwarded-host'];
   const BASE_URL = `${proto}://${host}`;
