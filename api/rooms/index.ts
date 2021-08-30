@@ -122,6 +122,6 @@ export default function (req: VercelRequest, res: VercelResponse) {
 
     roomList(req.query).then((data: any) => res.status(200).json(data));
   } catch (error) {
-    return res.status(500).json(error)
+    return res.status(500).json(error);
   }
 }
