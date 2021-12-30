@@ -1,7 +1,7 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import request from 'unirest';
 
-export default function (req: VercelRequest, res: VercelResponse) {
+export default function (req: VercelRequest, res: VercelResponse): Promise<void> | object {
   const { roomId } = req.query;
 
   if (!roomId) {
